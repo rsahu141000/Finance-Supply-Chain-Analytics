@@ -276,7 +276,9 @@ ORDER BY Month, product_code;
 /*
 Utilizing the dim_customer table, segment customers based on
 their purchasing behavior. Which customer segments contribute
-the most to sales revenue?*/SELECT
+the most to sales revenue?
+*/
+SELECT
     dc.customer_code,
     dc.customer,
     dc.platform,
@@ -322,7 +324,8 @@ GROUP BY dc.market
 ORDER BY Total_Forecast DESC;
 /*
 1. Define a user-defined function to calculate the total
-forecasted quantity for a given product and fiscal year.*/
+forecasted quantity for a given product and fiscal year.
+*/
 
 CREATE FUNCTION dbo.GetTotalForecastQuantity
 (@product_code NVARCHAR(45), @fiscal_year INT)
@@ -484,7 +487,9 @@ GROUP BY dc.market, dp.product;
 11. Develop a user-defined function to calculate the total
 freight cost for a product based on its market and fiscal
 year. Then, integrate this function into a stored procedure to
-update the overall cost.*/CREATE FUNCTION dbo.GetTotalFreightCost
+update the overall cost.
+*/
+CREATE FUNCTION dbo.GetTotalFreightCost
 (@market NVARCHAR(45), @fiscal_year INT)
 RETURNS DECIMAL(15,4)
 AS
@@ -499,7 +504,11 @@ END;
 12. Write a trigger that automatically updates the
 inventory count in the product table whenever a new sale is
 recorded, utilizing inbuilt functions to perform the
-calculation.*/ALTER TABLE dim_product ADD inventory_count INT DEFAULT 1000;CREATE TRIGGER trg_UpdateInventory
+calculation.
+*/
+ALTER TABLE dim_product ADD inventory_count INT DEFAULT 1000;
+
+CREATE TRIGGER trg_UpdateInventory
 ON fact_sales_monthly
 AFTER INSERT
 AS
@@ -508,10 +517,14 @@ BEGIN
     SET inventory_count = inventory_count - i.sold_quantity
     FROM dim_product dp
     JOIN inserted i ON dp.product_code = i.product_code;
-END;/*13. Implement a trigger to enforce referential integrity,
+END;
+/*
+13. Implement a trigger to enforce referential integrity,
 ensuring that only products listed in the product table can be
 added to the sales table, utilizing subqueries to validate the
-data.*/CREATE TRIGGER trg_ValidateProduct
+data.
+*/
+CREATE TRIGGER trg_ValidateProduct
 ON fact_sales_monthly
 INSTEAD OF INSERT
 AS
@@ -638,7 +651,9 @@ END;
 /*
 20. Write a query to retrieve the products with the highest
 average gross price across all fiscal years, using subqueries
-and inbuilt functions to perform the analysis*/SELECT TOP 1
+and inbuilt functions to perform the analysis
+*/
+SELECT TOP 1
     product_code,
     AVG(gross_price) AS AvgGrossPrice
 FROM fact_gross_price
